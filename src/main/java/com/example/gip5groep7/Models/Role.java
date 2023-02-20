@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Collection;
 @Entity
+@Table(name = "role")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,12 +13,20 @@ public class Role {
     @Column
     private String name;
 
-    //@ManyToMany
-    //private Collection<Privilege> priveleges = new Collection<Privilege>();
+    @ManyToMany
+    private Collection<Privilege> privileges;
 
-    //@ManyToMany
-    //private Collection<User> users = new Collection<User>();
+    @ManyToMany
+    private Collection<User> users;
 
+    public Role() {
+    }
+
+    public Role(String name, Collection<Privilege> privileges, Collection<User> users) {
+        this.name = name;
+        this.privileges = privileges;
+        this.users = users;
+    }
 
     public String getName() {
         return name;
@@ -25,5 +34,21 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Collection<Privilege> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(Collection<Privilege> privileges) {
+        this.privileges = privileges;
+    }
+
+    public Collection<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Collection<User> users) {
+        this.users = users;
     }
 }

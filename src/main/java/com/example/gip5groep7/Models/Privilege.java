@@ -14,16 +14,16 @@ public class Privilege {
     @Column
     private String name;
 
-//    @ManyToMany(mappedBy = "privileges")
-//    private Collection<Role> roles;
-//
-//    public Collection<Role> getRoles() {
-//        return roles;
-//    }
-//
-//    public void setRoles(Collection<Role> roles) {
-//        this.roles = roles;
-//    }
+    @ManyToMany(mappedBy = "privileges")
+    private Collection<Role> roles;
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
 
     public String getName() {
         return name;
