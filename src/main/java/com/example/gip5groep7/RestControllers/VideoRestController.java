@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/video")
-public class VideoController {
+public class VideoRestController {
 
     @Autowired
     private VideoService videoService;
