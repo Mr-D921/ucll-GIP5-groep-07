@@ -1,9 +1,6 @@
 package com.example.gip5groep7.Models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
@@ -11,6 +8,7 @@ import java.util.Date;
 @Table(name = "USER") //niet zeker of dit klopt
 public class  User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "username")
@@ -34,9 +32,9 @@ public class  User {
         return id;
     }
 
-    public void setId(int id) {
+    /*public void setId(int id) {
         this.id = id;
-    }
+    }*/
 
     public String getUsername() {
         return username;
@@ -81,8 +79,7 @@ public class  User {
     public User() {
     }
 
-    public User(int id, String username, String password, String name, String phoneNumber, Date dateOfBirth) {
-        setId(id);
+    public User(String username, String password, String name, String phoneNumber, Date dateOfBirth) {
         setUsername(username);
         setPassword(password);
         setName(name);
