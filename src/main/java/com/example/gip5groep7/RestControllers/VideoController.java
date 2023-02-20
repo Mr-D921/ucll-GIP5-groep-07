@@ -1,4 +1,4 @@
-package com.example.gip5groep7.Controllers;
+package com.example.gip5groep7.RestControllers;
 
 import com.example.gip5groep7.Services.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
