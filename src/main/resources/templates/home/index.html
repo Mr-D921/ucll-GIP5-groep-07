@@ -7,18 +7,50 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-<h1>Homepage</h1>
-<h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sodales maximus viverra. Sed sollicitudin aliquet
-    metus, a aliquet lectus luctus vitae. Duis maximus sit amet libero nec pulvinar. Sed sollicitudin volutpat gravida.
-    Phasellus faucibus vehicula ultrices. Nam sapien lectus, vestibulum a imperdiet a, commodo sed nibh. Nam condimentum
-    tempus sollicitudin. Mauris euismod eros vitae felis vestibulum, et efficitur mauris bibendum. Vivamus iaculis erat
-    erat, a laoreet dolor rhoncus a. Donec vestibulum eu enim nec vestibulum.
-
-    Fusce sit amet vulputate risus, et gravida massa. Aliquam pulvinar libero at maximus consectetur. Curabitur maximus
-    gravida nulla scelerisque venenatis. Nulla varius felis ac lorem commodo mollis. Nulla tempor ligula magna, sit amet
-    mollis nisi posuere sit amet. In hac habitasse platea dictumst. Donec rutrum, augue sed dapibus scelerisque, tellus
-    tortor auctor velit, quis egestas lectus sem et lacus. Vestibulum ultrices elit sit amet elit ultricies, ac
-    condimentum eros pulvinar. Sed ullamcorper ipsum nec porttitor consequat. Suspendisse pulvinar lectus magna, in
-    imperdiet quam consequat vel.</h4>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand mb-0 h1" href="#">
+            <img class="d-inline-block align-top" src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
+                 width="30"
+                 height="30">
+            Youtube
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
 </body>
 </html>
