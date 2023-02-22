@@ -16,16 +16,25 @@ public class Role {
     @ManyToMany
     private Collection<Privilege> privileges;
 
-    @ManyToMany
-    private Collection<User> users;
+    @ManyToOne
+    private User user;
 
     public Role() {
     }
 
-    public Role(String name, Collection<Privilege> privileges, Collection<User> users) {
+    /*public Role(String name, Collection<Privilege> privileges, Collection<User> users) {
         this.name = name;
         this.privileges = privileges;
         this.users = users;
+    }*/
+
+    public Role(String name, Collection<Privilege> privileges) {
+        this.name = name;
+        this.privileges = privileges;
+    }
+
+    public Role(String name){
+        this.name = name;
     }
 
     public String getName() {
@@ -44,11 +53,11 @@ public class Role {
         this.privileges = privileges;
     }
 
-    public Collection<User> getUsers() {
+    /*public Collection<User> getUsers() {
         return users;
     }
 
     public void setUsers(Collection<User> users) {
         this.users = users;
-    }
+    }*/
 }
