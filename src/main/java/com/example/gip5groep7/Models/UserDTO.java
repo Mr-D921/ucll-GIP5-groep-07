@@ -3,7 +3,7 @@ package com.example.gip5groep7.Models;
 import java.util.Date;
 
 public class UserDTO {
-    public int id;
+    //public int id;
     public String username;
     public String password;
     public String name;
@@ -12,13 +12,13 @@ public class UserDTO {
     //todo add Roles
 
 
-    public int getId() {
+    /*public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
+    }*/
 
     public String getUsername() {
         return username;
