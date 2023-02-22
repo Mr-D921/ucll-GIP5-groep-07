@@ -2,7 +2,10 @@ package com.example.gip5groep7.Models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "USER") //niet zeker of dit klopt
@@ -25,7 +28,11 @@ public class  User {
 
     @Column(name = "dateOfBirth")
     private Date dateOfBirth;
+
     //todo add Roles: Collection<Role>
+
+    @OneToMany
+    private List<Role> roles;
 
 
     public int getId() {
@@ -86,4 +93,27 @@ public class  User {
         setPhoneNumber(phoneNumber);
         setDateOfBirth(dateOfBirth);
     }
+
+    public void addRole(String name){
+        if (this.roles == null) this.roles = new ArrayList<Role>();
+        Role role = new Role(name);
+        this.roles.add(role);
+    }
+
+    public void deleteRole(String roleName){
+        for (Role roleToDelete : this.roles) {
+            if (roleToDelete.getName().equals(roleName)){
+                this.roles.remove(roleToDelete);
+            }
+        }
+    }
+
+    public void deleteRoleById(Long roleId){
+        for (Role roleToDelete : this.roles) {
+            if (roleToDelete.getId().equals(roleId)){
+                this.roles.remove(roleToDelete);
+            }
+        }
+    }
+
 }
