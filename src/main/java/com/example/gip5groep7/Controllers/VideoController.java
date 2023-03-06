@@ -23,6 +23,10 @@ public class VideoController {
     @PostMapping
     public ResponseEntity<VideoDTO> createVideo(@RequestPart VideoDTO videoDTO, @RequestPart MultipartFile data) {
         try {
+            //Check whether a file was uploaded, and whether it was a mp4 file. Return bad request if either is false
+            if(data == null || data.isEmpty() || (data.getContentType() != null && !data.getContentType().equals("video/mp4"))) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             videoDTO.data = data.getBytes();
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
