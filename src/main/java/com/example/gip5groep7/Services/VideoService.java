@@ -46,11 +46,11 @@ public class VideoService {
             Video video = value.get();
 
             video.setName(videoDTO.name);
-            video.setViews(videoDTO.views);
-            video.setPlaytime(videoDTO.playtime);
-            video.setUploadDate(videoDTO.uploadDate);
+            //video.setViews(videoDTO.views);
+            //video.setPlaytime(videoDTO.playtime);
+            //video.setUploadDate(videoDTO.uploadDate);
             video.setTags(videoDTO.tags);
-            video.setData(videoDTO.data);
+            //video.setData(videoDTO.data);
 
             return video;
         }

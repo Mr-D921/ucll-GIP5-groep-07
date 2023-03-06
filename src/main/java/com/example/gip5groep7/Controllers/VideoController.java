@@ -45,13 +45,14 @@ public class VideoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<VideoDTO> updateVideo(@PathVariable("id") int id, @RequestPart VideoDTO videoDTO, @RequestPart MultipartFile data) {
+    public ResponseEntity<VideoDTO> updateVideo(@PathVariable("id") int id, @RequestBody VideoDTO videoDTO/*, @RequestPart MultipartFile data*/) {
         //TODO: must the video data be overwrite-able?
+        /*
         try {
             videoDTO.data = data.getBytes();
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        }*/
         Video video = videoService.updateVideo(id, videoDTO);
 
         VideoDTO responseDTO = videoToDTO(video);
