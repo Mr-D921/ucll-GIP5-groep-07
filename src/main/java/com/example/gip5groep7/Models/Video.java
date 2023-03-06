@@ -2,6 +2,7 @@ package com.example.gip5groep7.Models;
 
 import jakarta.persistence.*;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class Video {
     //Save contents of the video file as an array bytes, which can later be reinterpreted
     //Tag lob will cause the data to be saved as a BLOB (binary large object) in the database
     @Lob
+    @Column(name = "file", columnDefinition = "LONGBLOB")
     private byte[] data;
 
     //endregion

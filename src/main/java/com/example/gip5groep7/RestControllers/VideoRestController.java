@@ -21,7 +21,9 @@ public class VideoRestController {
     private VideoService videoService;
 
     @PostMapping
-    public ResponseEntity<VideoDTO> createVideo(@RequestPart VideoDTO videoDTO, @RequestPart MultipartFile data) {
+    public ResponseEntity<VideoDTO> createVideo(@RequestPart String name, @RequestPart MultipartFile data) {
+        VideoDTO videoDTO = new VideoDTO();
+        videoDTO.name = name;
         try {
             videoDTO.data = data.getBytes();
         } catch (IOException e) {
