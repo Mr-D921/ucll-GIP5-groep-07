@@ -1,27 +1,34 @@
 package com.example.gip5groep7.Controllers;
 
 import com.example.gip5groep7.Models.Video;
-import com.example.gip5groep7.Models.VideoDTO;
 import com.example.gip5groep7.RestControllers.VideoRestController;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class HomeController {
+    final
     VideoRestController videoRestController;
+
+    public HomeController(VideoRestController videoRestController) {
+        this.videoRestController = videoRestController;
+    }
+
     @GetMapping("/")
     public String home(Model model){
-        //Iterable<Video> allVideos = videoRestController.getAllVideos().getBody();
-        //model.addAttribute(allVideos);
+        ResponseEntity<Iterable<Video>> allVideosResponseEntity = videoRestController.getAllVideos();
+        if (allVideosResponseEntity != null) {
+            Iterable<Video> allVideos = allVideosResponseEntity.getBody();
+            model.addAttribute("videoList", allVideos);
+        }
+
         return "home/index";
     }
     @RequestMapping("/{videoCode}")
     public String redirectToVideo(@PathVariable String videoCode, Model model){
-        model.addAttribute(videoCode);
+        model.addAttribute("videoCodeKey",videoCode);
         return "video/index";
     }
 
