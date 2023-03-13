@@ -2,6 +2,7 @@ package com.example.gip5groep7.Controllers;
 
 import com.example.gip5groep7.Models.Video;
 import com.example.gip5groep7.RestControllers.VideoRestController;
+import com.example.gip5groep7.Services.VideoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
