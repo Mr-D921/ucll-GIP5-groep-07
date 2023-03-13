@@ -4,14 +4,10 @@ import com.example.gip5groep7.Models.Video;
 import com.example.gip5groep7.Models.VideoDTO;
 import com.example.gip5groep7.Services.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/video")
@@ -24,11 +20,14 @@ public class VideoRestController {
     public ResponseEntity<VideoDTO> createVideo(@RequestPart String name, @RequestPart MultipartFile data) {
         VideoDTO videoDTO = new VideoDTO();
         videoDTO.name = name;
+        //TODO: implement way to save video url (javascript?)
+        /*
         try {
             videoDTO.data = data.getBytes();
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+         */
         Video video = videoService.createVideo(videoDTO);
 
         VideoDTO responseDTO = videoToDTO(video);
@@ -37,8 +36,9 @@ public class VideoRestController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Resource> getVideoById(@PathVariable("id") int id) {
-        return ResponseEntity.ok(new ByteArrayResource(videoService.findVideoById(id).getData()));
+    public ResponseEntity<String> getVideoById(@PathVariable("id") int id) {
+        //TODO: check whether just sending the url is fine
+        return ResponseEntity.ok(videoService.findVideoById(id).getFileURL());
     }
 
     @GetMapping
@@ -47,13 +47,7 @@ public class VideoRestController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<VideoDTO> updateVideo(@PathVariable("id") int id, @RequestPart VideoDTO videoDTO, @RequestPart MultipartFile data) {
-        //TODO: must the video data be overwrite-able?
-        try {
-            videoDTO.data = data.getBytes();
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<VideoDTO> updateVideo(@PathVariable("id") int id, @RequestPart VideoDTO videoDTO) {
         Video video = videoService.updateVideo(id, videoDTO);
 
         VideoDTO responseDTO = videoToDTO(video);
@@ -73,7 +67,7 @@ public class VideoRestController {
         dto.views = video.getViews();
         dto.playtime = video.getPlaytime();
         dto.uploadDate = video.getUploadDate();
-        dto.data = video.getData();
+        dto.fileURL = video.getFileURL();
         dto.tags = video.getTags();
 
         return dto;

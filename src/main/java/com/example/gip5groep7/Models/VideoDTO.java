@@ -16,7 +16,7 @@ public class VideoDTO {
 
     public List<String> tags;
 
-    public byte[] data;
+    public String fileURL;
 
     public VideoDTO() {}
 

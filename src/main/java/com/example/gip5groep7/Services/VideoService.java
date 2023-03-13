@@ -19,7 +19,7 @@ public class VideoService {
                 videoDTO.name,
                 videoDTO.playtime,
                 videoDTO.tags,
-                videoDTO.data
+                videoDTO.fileURL
         );
 
         return videoRepo.save(newVideo);
@@ -46,11 +46,11 @@ public class VideoService {
             Video video = value.get();
 
             video.setName(videoDTO.name);
-            video.setViews(videoDTO.views);
-            video.setPlaytime(videoDTO.playtime);
-            video.setUploadDate(videoDTO.uploadDate);
+            //video.setViews(videoDTO.views);
+            //video.setPlaytime(videoDTO.playtime);
+            //video.setUploadDate(videoDTO.uploadDate);
             video.setTags(videoDTO.tags);
-            video.setData(videoDTO.data);
+            //video.setFileURL(videoDTO.fileURL);
 
             return video;
         }

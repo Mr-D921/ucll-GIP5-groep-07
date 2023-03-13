@@ -2,7 +2,6 @@ package com.example.gip5groep7.Models;
 
 import jakarta.persistence.*;
 
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,32 +29,29 @@ public class Video {
     @ElementCollection
     private List<String> tags;
 
-    //Save contents of the video file as an array bytes, which can later be reinterpreted
-    //Tag lob will cause the data to be saved as a BLOB (binary large object) in the database
-    @Lob
-    @Column(name = "file", columnDefinition = "LONGBLOB")
-    private byte[] data;
+    @Column
+    private String fileURL;
 
     //endregion
 
     public Video() {}
 
-    public Video(String name, int playtime, List<String> tags, byte[] data) {
+    public Video(String name, int playtime, List<String> tags, String fileURL) {
         this.name = name;
         this.views = 0;
         this.playtime = playtime; //TODO: figure out how to extract playtime from video data
         this.uploadDate = LocalDateTime.now();
         this.tags = tags;
-        this.data = data;
+        this.fileURL = fileURL;
     }
 
-    public Video(String name, int views, int playtime, LocalDateTime uploadDate, List<String> tags, byte[] data) {
+    public Video(String name, int views, int playtime, LocalDateTime uploadDate, List<String> tags, String fileURL) {
         this.name = name;
         this.views = views;
         this.playtime = playtime;
         this.uploadDate = uploadDate;
         this.tags = tags;
-        this.data = data;
+        this.fileURL = fileURL;
     }
 
     //region Getters & Setters
@@ -138,12 +134,12 @@ public class Video {
 
     //region Data
 
-    public byte[] getData() {
-        return data;
+    public String getFileURL() {
+        return fileURL;
     }
 
-    public void setData(byte[] data) {
-        this.data = data;
+    public void setFileURL(String url) {
+        this.fileURL = url;
     }
 
     //endregion
