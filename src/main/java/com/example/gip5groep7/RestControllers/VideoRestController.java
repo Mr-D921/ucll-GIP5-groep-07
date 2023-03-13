@@ -27,6 +27,10 @@ public class VideoRestController {
     public String[] uploadVideoTest(@RequestParam("data") MultipartFile file) throws IOException {
         return videoService.uploadFile(file);
     }
+    @GetMapping("/areyouthere")
+    public ResponseEntity<Object> getVideo(String filename) throws Exception {
+        return videoService.downloadFile(filename);
+    }
     /*@GetMapping(value = "test/video/{title}", produces = "video/mp4")
     public Mono<Resource> getVideosTest(@PathVariable String title, @RequestHeader("Range") String range){
         Firestore dbFirestore = FirestoreClient.getFirestore();

@@ -6,15 +6,20 @@ import com.example.gip5groep7.Models.VideoDTO;
 import com.example.gip5groep7.Repositories.VideoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.ReadChannel;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.StorageOptions;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
@@ -25,11 +30,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class VideoService {
@@ -66,8 +70,12 @@ public class VideoService {
         Storage storage = storageOptions.getService();
 
         BlobId blobId = BlobId.of(bucketName, objectName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-        Blob blob = ((com.google.cloud.storage.Storage) storage).create(blobInfo, Files.readAllBytes(filePath));
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("video/mp4").build();
+
+        ((com.google.cloud.storage.Storage) storage).create(blobInfo, Files.readAllBytes(filePath));
+
+        //Blob blob = storage.get(blobId);
+        //blob.toBuilder().setMetadata(newMetadata).build();
 
         System.out.println(("File " + filePath + " uploaded to bucket " + bucketName + " as " + objectName));
         return new String[]{"fileUrl", objectName};
@@ -107,6 +115,27 @@ public class VideoService {
         return convertedFile;
     }
 
+    public ResponseEntity<Object> downloadFile(String fileName) throws Exception {
+        Storage storage = storageOptions.getService();
+
+        Blob blob = storage.get(BlobId.of(bucketName, "1678729489482-banana.mp4"));
+        ReadChannel reader = blob.reader();
+        InputStream inputStream = Channels.newInputStream(reader);
+
+        byte[] content = null;
+
+        content = IOUtils.toByteArray(inputStream);
+
+        final ByteArrayResource byteArrayResource = new ByteArrayResource(content);
+
+        return ResponseEntity
+                .ok()
+                .contentLength(content.length)
+                .header("Content-type", "video/mp4")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .body(byteArrayResource);
+
+    }
     public Video createVideo(VideoDTO videoDTO) {
         Video newVideo = new Video(
                 videoDTO.name,
