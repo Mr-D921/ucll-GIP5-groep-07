@@ -17,20 +17,29 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/video")
+@RequestMapping("/api")
 public class VideoRestController {
 
     @Autowired
     private VideoService videoService;
-    //test if video goes to the firebase
-    @PostMapping("/test/upload")
-    public String[] uploadVideoTest(@RequestParam("data") MultipartFile file) throws IOException {
-        return videoService.uploadFile(file);
+
+    // upload video to firebase
+    // upload video url to sql database
+    // it returns the file name which can be used to download the video
+    @PostMapping("/video/upload")
+    public String uploadVideoToFirebase(@RequestParam("data") MultipartFile file) throws IOException {
+        VideoDTO videoDTO = new VideoDTO();
+        videoDTO.fileURL = videoService.uploadFile(file);
+        videoService.createVideo(videoDTO);
+        return videoDTO.fileURL;
     }
-    @GetMapping("/areyouthere")
-    public ResponseEntity<Object> getVideo(String filename) throws Exception {
+
+    // download video from firebase based on file name
+    @GetMapping("/video/{filename}")
+    public ResponseEntity<Object> getVideo(@PathVariable String filename) throws Exception {
         return videoService.downloadFile(filename);
     }
+
     /*@GetMapping(value = "test/video/{title}", produces = "video/mp4")
     public Mono<Resource> getVideosTest(@PathVariable String title, @RequestHeader("Range") String range){
         Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -58,11 +67,11 @@ public class VideoRestController {
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
+    /*@GetMapping("{id}")
     public ResponseEntity<String> getVideoById(@PathVariable("id") int id) {
         //TODO: check whether just sending the url is fine
         return ResponseEntity.ok(videoService.findVideoById(id).getFileURL());
-    }
+    }*/
 
     @GetMapping
     public ResponseEntity<Iterable<Video>> getAllVideos() {

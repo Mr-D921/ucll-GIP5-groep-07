@@ -9,7 +9,7 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand mb-0 h1" href="#">
+        <a class="navbar-brand mb-0 h1" href="\">
             <img class="d-inline-block align-top" src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
                  width="30"
                  height="30">
@@ -22,10 +22,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="\">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="\video\upload">Upload</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -52,9 +52,9 @@
 <table>
     <tbody>
     <tr th:each="video: ${videoList}">
+        <td><span th:text="${video.uploadDate}"></span></td>
         <td><span th:text="${video.id}"></span></td>
-        <td><span th:text="${video.name}"></span></td>
-        <td><span th:text="${video.data}"></span></td>
+        <td><a th:href="@{/video/{video}(video=${video.fileURL})}" th:text="${video.fileURL}"></a></td>
     </tr>
     </tbody>
 </table>

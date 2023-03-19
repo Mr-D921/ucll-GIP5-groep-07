@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 public class HomeController {
@@ -27,15 +30,40 @@ public class HomeController {
 
         return "home/index";
     }
-    @RequestMapping("/{videoCode}")
+    /*@RequestMapping("/{videoCode}")
     public String redirectToVideo(@PathVariable String videoCode, Model model){
         model.addAttribute("videoCodeKey",videoCode);
         return "video/index";
-    }
-
+    }*/
+    //video upload page
     @RequestMapping("/video/upload")
     public String uploadVideo(){
         return "video/create";
+    }
+    //routing of upload video
+    //TODO this should redirect the user to an "upload successful" page
+    @RequestMapping("/video/upload/post")
+    public String uploadVideoPostRequest(@RequestParam("data") MultipartFile file, Model model) throws IOException {
+
+        videoRestController.uploadVideoToFirebase(file);
+        model.addAttribute("isCreated", "Video");
+        return "video/create";
+    }
+    @RequestMapping("/video/{videoName}")
+    public String testtesttest(Model model, @PathVariable String videoName) throws Exception {
+        /*ResponseEntity<Object> test = videoRestController.getVideo(videoName);
+        boolean isVideoFound;
+        if (test != null) {
+            isVideoFound = true;
+        }else {
+            isVideoFound = false;}*/
+
+        model.addAttribute("videoName", videoName);
+
+        //model.addAttribute("videoFile", test);
+        //model.addAttribute("videoName", test.getHeaders().get("filename"));
+        //model.addAttribute("videoFile", test);
+        return "video/index";
     }
 
     /*@PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

@@ -62,7 +62,7 @@ public class VideoService {
                 .setCredentials(GoogleCredentials.fromStream(firebaseCredential)).build();
 
     }
-    public String[] uploadFile(MultipartFile multipartFile) throws IOException {
+    public String uploadFile(MultipartFile multipartFile) throws IOException {
         File file = convertMultiPartToFile(multipartFile);
         Path filePath = file.toPath();
         String objectName = generateFileName(multipartFile);
@@ -78,7 +78,7 @@ public class VideoService {
         //blob.toBuilder().setMetadata(newMetadata).build();
 
         System.out.println(("File " + filePath + " uploaded to bucket " + bucketName + " as " + objectName));
-        return new String[]{"fileUrl", objectName};
+        return objectName;
     }
     private String generateFileName(MultipartFile multiPart) {
         return new Date().getTime() + "-" + Objects.requireNonNull(multiPart.getOriginalFilename()).replace(" ", "_");
@@ -118,7 +118,7 @@ public class VideoService {
     public ResponseEntity<Object> downloadFile(String fileName) throws Exception {
         Storage storage = storageOptions.getService();
 
-        Blob blob = storage.get(BlobId.of(bucketName, "1678729489482-banana.mp4"));
+        Blob blob = storage.get(BlobId.of(bucketName, fileName));
         ReadChannel reader = blob.reader();
         InputStream inputStream = Channels.newInputStream(reader);
 
@@ -127,12 +127,12 @@ public class VideoService {
         content = IOUtils.toByteArray(inputStream);
 
         final ByteArrayResource byteArrayResource = new ByteArrayResource(content);
-
+        //byteArrayResource.getFilename();
         return ResponseEntity
                 .ok()
                 .contentLength(content.length)
                 .header("Content-type", "video/mp4")
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "bananatest.mp4" + "\"")
                 .body(byteArrayResource);
 
     }
