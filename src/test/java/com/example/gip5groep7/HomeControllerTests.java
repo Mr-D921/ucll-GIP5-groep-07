@@ -1,83 +1,92 @@
 package com.example.gip5groep7;
 
-import com.example.gip5groep7.Controllers.HomeController;
 import com.example.gip5groep7.Models.Video;
 import com.example.gip5groep7.RestControllers.VideoRestController;
+import com.example.gip5groep7.Services.VideoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
-public class HomeControllerTests {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+public class HomeControllerTest {
 
-    private static final String HOME_VIEW_NAME = "home/index";
-    private static final String VIDEO_VIEW_NAME = "video/index";
-    private static final String CREATE_VIDEO_VIEW_NAME = "video/create";
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private VideoRestController videoRestController;
 
-    @Mock
-    private Model model;
-
-    @InjectMocks
-    private HomeController homeController;
-
     @Test
-    public void testHomeMethod() {
-        // Setup
-        List<Video> videoList = new ArrayList<>();
+    public void testHomeEndpoint() throws Exception {
+        List<Video> videos = new ArrayList<>();
         Video video1 = new Video();
-        video1.setId(1);
         video1.setName("video1");
-        video1.setViews(100);
-        videoList.add(video1);
-        ResponseEntity<Iterable<Video>> responseEntity = new ResponseEntity<>(videoList, HttpStatus.OK);
-        when(videoRestController.getAllVideos()).thenReturn(responseEntity);
+        video1.setFileURL("url1");
+        Video video2 = new Video();
+        video2.setName("video2");
+        video2.setFileURL("url2");
+        videos.add(video1);
+        videos.add(video2);
+        Mockito.when(videoRestController.getAllVideos()).thenReturn(ResponseEntity.ok(videos));
 
-        // Exercise
-        String viewName = homeController.home(model);
-
-        // Verify
-        assertEquals(HOME_VIEW_NAME, viewName);
-        verify(model).addAttribute(eq("videoList"), anyList());
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("home/index"))
+                .andExpect(model().attribute("videoList", hasSize(2)))
+                .andExpect(content().string(containsString("video1")))
+                .andExpect(content().string(containsString("video2")));
     }
 
     @Test
-    public void testRedirectToVideoMethod() {
-        // Setup
-        String videoCodeKey = "abc";
-        Model model = mock(Model.class);
-
-        // Exercise
-        String viewName = homeController.redirectToVideo(videoCodeKey, model);
-
-        // Verify
-        assertEquals(VIDEO_VIEW_NAME, viewName);
-        verify(model).addAttribute(eq("videoCodeKey"), eq(videoCodeKey));
+    public void testUploadVideoEndpoint() throws Exception {
+        mockMvc.perform(get("/video/upload"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("video/create"));
     }
 
     @Test
-    public void testUploadVideoMethod() {
-        // Exercise
-        String viewName = homeController.uploadVideo();
+    public void testUploadVideoPostRequestEndpoint() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("data", "filename.mp4", MediaType.MULTIPART_FORM_DATA_VALUE, "test video".getBytes());
+        when(videoRestController.uploadVideoToFirebase(any())).thenReturn("url");
 
-        // Verify
-        assertEquals(CREATE_VIDEO_VIEW_NAME, viewName);
+        mockMvc.perform(multipart("/video/upload/post")
+                        .file(file))
+                .andExpect(status().isOk())
+                .andExpect(view().name("video/create"))
+                .andExpect(model().attribute("isCreated", "Video"));
+    }
+
+    @Test
+    public void testVideoNameEndpoint() throws Exception {
+        String videoName = "testVideo";
+        mockMvc.perform(get("/video/{videoName}", videoName))
+                .andExpect(status().isOk())
+                .andExpect(view().name("video/index"))
+                .andExpect(model().attribute("videoName", videoName));
     }
 }
