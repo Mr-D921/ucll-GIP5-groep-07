@@ -24,8 +24,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -72,14 +71,17 @@ public class HomeControllerTests {
     @Test
     public void testUploadVideoPostRequestEndpoint() throws Exception {
         MockMultipartFile file = new MockMultipartFile("data", "filename.mp4", MediaType.MULTIPART_FORM_DATA_VALUE, "test video".getBytes());
-        when(videoRestController.uploadVideoToFirebase(any())).thenReturn("url");
+        when(videoRestController.uploadVideoToFirebase(eq(file), any(String.class), any(String.class))).thenReturn("url");
 
         mockMvc.perform(multipart("/video/upload/post")
-                        .file(file))
+                        .file(file)
+                        .param("videoName", "Test Video")
+                        .param("tags", "tag1,tag2"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("video/create"))
                 .andExpect(model().attribute("isCreated", "Video"));
     }
+
 
     @Test
     public void testVideoNameEndpoint() throws Exception {
