@@ -135,6 +135,19 @@ public class VideoService {
                 .body(byteArrayResource);
 
     }
+
+    public String deleteVideoFromFirebaseAndDatabase(String fileName){
+        //delete video file from the project based on file name
+        Storage storage = storageOptions.getService();
+        storage.delete(BlobId.of(bucketName, fileName));
+        System.out.println("File '" + fileName + "' successfully deleted from bucket.");
+
+        //delete video from sql database
+        videoRepo.delete(videoRepo.findByFileURL(fileName).get());
+        System.out.println("File '" + fileName + "' successfully deleted from sql database.");
+        return fileName + " is successfully deleted from server.";
+    }
+
     public Video createVideo(VideoDTO videoDTO) {
         Video newVideo = new Video(
                 videoDTO.name,

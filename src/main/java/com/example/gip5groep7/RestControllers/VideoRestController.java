@@ -44,14 +44,11 @@ public class VideoRestController {
     public ResponseEntity<Object> getVideo(@PathVariable String filename) throws Exception {
         return videoService.downloadFile(filename);
     }
+    @DeleteMapping("/video/delete/{filename}")
+    public String deleteVideo(@PathVariable String filename){
+        return videoService.deleteVideoFromFirebaseAndDatabase(filename);
+    }
 
-    /*@GetMapping(value = "test/video/{title}", produces = "video/mp4")
-    public Mono<Resource> getVideosTest(@PathVariable String title, @RequestHeader("Range") String range){
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-
-        System.out.println("range in bytes(): " + range);
-        return videoService.getVideo(title);
-    }*/
 
     @PostMapping
     public ResponseEntity<VideoDTO> createVideo(@RequestPart String name, @RequestPart MultipartFile data) {

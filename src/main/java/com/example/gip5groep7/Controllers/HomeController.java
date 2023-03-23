@@ -60,6 +60,11 @@ public class HomeController {
         //model.addAttribute("videoFile", test);
         return "video/index";
     }
+    @GetMapping("/video/delete/{filename}")
+    public String deleteVideo(@PathVariable String filename){
+        videoService.deleteVideoFromFirebaseAndDatabase(filename);
+        return "home/index";
+    }
 
     /*@PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public String createVideo(@RequestPart String name, @RequestPart MultipartFile data) {
