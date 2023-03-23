@@ -74,8 +74,6 @@ public class VideoService {
 
         ((com.google.cloud.storage.Storage) storage).create(blobInfo, Files.readAllBytes(filePath));
 
-        //Blob blob = storage.get(blobId);
-        //blob.toBuilder().setMetadata(newMetadata).build();
 
         System.out.println(("File " + filePath + " uploaded to bucket " + bucketName + " as " + objectName));
         return objectName;
@@ -128,6 +126,7 @@ public class VideoService {
 
         final ByteArrayResource byteArrayResource = new ByteArrayResource(content);
         //byteArrayResource.getFilename();
+        //TODO change filename
         return ResponseEntity
                 .ok()
                 .contentLength(content.length)
@@ -179,6 +178,24 @@ public class VideoService {
         else {
             return null; //TODO: throw Exception instead?
         }
+    }
+
+    public VideoDTO getVideoDTOByName(String videoName){
+        Video video = videoRepo.findByFileURL(videoName).get();
+        return convertVideoTOVideoDTO(video);
+    }
+    private VideoDTO convertVideoTOVideoDTO(Video video){
+        VideoDTO videoDTO = new VideoDTO();
+        videoDTO.views = video.getViews();
+        videoDTO.name = video.getName();
+        videoDTO.tags = video.getTags();
+        videoDTO.fileURL = video.getFileURL();
+        return videoDTO;
+    }
+    public void updateVideoViewCount(String filename){
+        Video video = videoRepo.findByFileURL(filename).get();
+        video.incrementViewCount();
+        videoRepo.save(video);
     }
 
     public boolean deleteVideo(int id) {

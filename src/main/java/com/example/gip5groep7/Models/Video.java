@@ -142,6 +142,9 @@ public class Video {
         this.fileURL = url;
     }
 
+    public void incrementViewCount(){
+        this.views+=1;
+    }
     //endregion
 
     //endregion
