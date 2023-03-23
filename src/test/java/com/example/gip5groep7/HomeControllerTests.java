@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HomeControllerTest {
+public class HomeControllerTests {
 
     @Autowired
     private MockMvc mockMvc;

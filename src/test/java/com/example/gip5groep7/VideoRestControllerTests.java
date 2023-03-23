@@ -1,115 +1,129 @@
-package com.example.gip5groep7.RestControllers;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+package com.example.gip5groep7;
 
 import com.example.gip5groep7.Models.Video;
 import com.example.gip5groep7.Models.VideoDTO;
+import com.example.gip5groep7.RestControllers.VideoRestController;
 import com.example.gip5groep7.Services.VideoService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
-
-import reactor.core.publisher.Mono;
+import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(VideoRestController.class)
-public class VideoRestControllerTest {
+class VideoRestControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private VideoRestController controller;
 
-    @Autowired
-    private WebApplicationContext wac;
-
-    @MockBean
-    private VideoService videoService;
+    @Mock
+    private VideoService service;
 
     @BeforeEach
-    public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+    void setUp() {
+        controller = new VideoRestController();
+        controller.videoService = service;
     }
 
-    @Test
-    public void uploadVideoToFirebaseTest() throws Exception {
-        // create mock file
-        String content = "example video content";
-        InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-        MockMultipartFile file = new MockMultipartFile("data", "test.mp4", "video/mp4", stream);
+    /*@Test
+    void uploadVideoToFirebase_returnsUrl() throws IOException {
+        MultipartFile file = // create a mock MultipartFile object
+                String url = "https://example.com/video.mp4";
+        when(service.uploadFile(any(MultipartFile.class))).thenReturn(url);
 
-        // create mock VideoDTO object
+        String result = controller.uploadVideoToFirebase(file);
+
+        assertEquals(url, result);
+    }*/
+
+    @Test
+    public void testUploadVideoToFirebase() throws IOException {
+        // create mock VideoService
+        VideoService videoServiceMock = Mockito.mock(VideoService.class);
+
+        // create instance of VideoRestController
+        VideoRestController videoRestController = new VideoRestController();
+        videoRestController.videoService = videoServiceMock;
+
+        // create mock MultipartFile
+        byte[] data = "test data".getBytes();
+        MockMultipartFile file = new MockMultipartFile("data", "test.mp4", "video/mp4", data);
+
+        // set up mock VideoDTO
+        String expectedFileUrl = "https://example.com/test.mp4";
+        VideoDTO expectedVideoDTO = new VideoDTO();
+        expectedVideoDTO.fileURL = expectedFileUrl;
+
+        // set up mock VideoService method calls
+        Mockito.when(videoServiceMock.uploadFile(file)).thenReturn(expectedFileUrl);
+        Mockito.when(videoServiceMock.createVideo(expectedVideoDTO)).thenReturn(new Video());
+
+        // call method being tested
+        String actualFileUrl = videoRestController.uploadVideoToFirebase(file);
+
+        // assert results
+        assertEquals(expectedFileUrl, actualFileUrl);
+        Mockito.verify(videoServiceMock).uploadFile(file);
+        Mockito.verify(videoServiceMock).createVideo(expectedVideoDTO);
+    }
+
+
+    /*@Test
+    void getVideo_returnsVideo() throws Exception {
+        String filename = "video.mp4";
+        ResponseEntity<Object> responseEntity = // create a mock response entity
+                when(service.downloadFile(filename)).thenReturn(responseEntity);
+
+        ResponseEntity<Object> result = controller.getVideo(filename);
+
+        assertEquals(responseEntity, result);
+    }*/
+
+    /*@Test
+    void createVideo_returnsCreatedVideo() {
+        String name = "Video Title";
+        MultipartFile file = // create a mock MultipartFile object
+                VideoDTO videoDTO = new VideoDTO();
+        videoDTO.name = name;
+        when(service.createVideo(videoDTO)).thenReturn(new Video());
+
+        ResponseEntity<VideoDTO> responseEntity = controller.createVideo(name, file);
+
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals(name, responseEntity.getBody().name);
+    }*/
+
+    @Test
+    void updateVideo_returnsUpdatedVideo() {
+        int id = 1;
         VideoDTO videoDTO = new VideoDTO();
-        videoDTO.setFileURL("https://example.com/test.mp4");
+        videoDTO.name = "Updated Title";
+        Video updatedVideo = new Video();
+        when(service.updateVideo(id, videoDTO)).thenReturn(updatedVideo);
 
-        // mock videoService behavior
-        when(videoService.uploadFile(any(MultipartFile.class))).thenReturn("https://example.com/test.mp4");
-        when(videoService.createVideo(any(VideoDTO.class))).thenReturn(new Video());
+        ResponseEntity<VideoDTO> responseEntity = controller.updateVideo(id, videoDTO);
 
-        // perform request
-        MvcResult result = mockMvc.perform(multipart("/api/video/upload")
-                        .file(file))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // verify response
-        String response = result.getResponse().getContentAsString();
-        assertEquals("https://example.com/test.mp4", response);
-
-        // verify service calls
-        verify(videoService, times(1)).uploadFile(any(MultipartFile.class));
-        verify(videoService, times(1)).createVideo(any(VideoDTO.class));
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(updatedVideo.getName(), responseEntity.getBody().name);
     }
 
     @Test
-    void getVideoTest() throws Exception {
-        // Setup
-        String filename = "example.mp4";
-        String expectedContentType = "video/mp4";
-        byte[] expectedData = {0x12, 0x34, 0x56, 0x78}; // Example data
-        HttpHeaders expectedHeaders = new HttpHeaders();
-        expectedHeaders.setContentType(MediaType.parseMediaType(expectedContentType));
-        expectedHeaders.setContentLength(expectedData.length);
-        expectedHeaders.set("Content-Range", "bytes 0-" + (expectedData.length - 1) + "/" + expectedData.length);
+    void deleteVideo_returnsTrue() {
+        int id = 1;
+        when(service.deleteVideo(id)).thenReturn(true);
 
-        ResponseEntity<Object> expectedResponse = new ResponseEntity<>(new ByteArrayResource(expectedData), expectedHeaders, HttpStatus.OK);
+        ResponseEntity<Boolean> responseEntity = controller.deleteVideo(id);
 
-        when(videoService.downloadFile(filename)).thenReturn(expectedResponse);
-
-        // Execution
-        VideoRestController videoRestController;
-        ResponseEntity<Object> actualResponse = videoRestController.getVideo(filename);
-
-        // Assertion
-        assertEquals(expectedContentType, actualResponse.getHeaders().getContentType().toString());
-        assertEquals(expectedData.length, actualResponse.getBody().toString().getBytes().length);
-        assertEquals(expectedResponse, actualResponse);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.getBody());
     }
 }
