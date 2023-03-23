@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -27,9 +29,12 @@ public class VideoRestController {
     // upload video url to sql database
     // it returns the file name which can be used to download the video
     @PostMapping("/video/upload")
-    public String uploadVideoToFirebase(@RequestParam("data") MultipartFile file) throws IOException {
+    public String uploadVideoToFirebase(@RequestParam("data") MultipartFile file, String name, String tags) throws IOException {
         VideoDTO videoDTO = new VideoDTO();
         videoDTO.fileURL = videoService.uploadFile(file);
+        videoDTO.views = 0;
+        videoDTO.name = name;
+        videoDTO.tags = Arrays.asList(tags.split("\\s*,\\s*"));
         videoService.createVideo(videoDTO);
         return videoDTO.fileURL;
     }

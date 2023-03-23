@@ -1,8 +1,11 @@
 package com.example.gip5groep7.Controllers;
 
 import com.example.gip5groep7.Models.Video;
+import com.example.gip5groep7.Models.VideoDTO;
+import com.example.gip5groep7.Repositories.VideoRepository;
 import com.example.gip5groep7.RestControllers.VideoRestController;
 import com.example.gip5groep7.Services.VideoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +18,8 @@ import java.io.IOException;
 public class HomeController {
     final
     VideoRestController videoRestController;
-
+    @Autowired
+    VideoService videoService;
     public HomeController(VideoRestController videoRestController) {
         this.videoRestController = videoRestController;
     }
@@ -30,11 +34,7 @@ public class HomeController {
 
         return "home/index";
     }
-    /*@RequestMapping("/{videoCode}")
-    public String redirectToVideo(@PathVariable String videoCode, Model model){
-        model.addAttribute("videoCodeKey",videoCode);
-        return "video/index";
-    }*/
+
     //video upload page
     @RequestMapping("/video/upload")
     public String uploadVideo(){
@@ -43,23 +43,18 @@ public class HomeController {
     //routing of upload video
     //TODO this should redirect the user to an "upload successful" page
     @RequestMapping("/video/upload/post")
-    public String uploadVideoPostRequest(@RequestParam("data") MultipartFile file, Model model) throws IOException {
+    public String uploadVideoPostRequest(@RequestParam("data") MultipartFile file, Model model, @RequestParam("videoName") String name, @RequestParam("tags") String tagsStr) throws IOException {
 
-        videoRestController.uploadVideoToFirebase(file);
+        videoRestController.uploadVideoToFirebase(file, name, tagsStr);
         model.addAttribute("isCreated", "Video");
         return "video/create";
     }
     @RequestMapping("/video/{videoName}")
-    public String testtesttest(Model model, @PathVariable String videoName) throws Exception {
-        /*ResponseEntity<Object> test = videoRestController.getVideo(videoName);
-        boolean isVideoFound;
-        if (test != null) {
-            isVideoFound = true;
-        }else {
-            isVideoFound = false;}*/
-
-        model.addAttribute("videoName", videoName);
-
+    public String getVideoByName(Model model, @PathVariable String videoName) throws Exception {
+        VideoDTO videoDTO = videoService.getVideoDTOByName(videoName);
+        videoService.updateVideoViewCount(videoName);
+       // model.addAttribute("videoName", videoName);
+        model.addAttribute("Video", videoDTO);
         //model.addAttribute("videoFile", test);
         //model.addAttribute("videoName", test.getHeaders().get("filename"));
         //model.addAttribute("videoFile", test);

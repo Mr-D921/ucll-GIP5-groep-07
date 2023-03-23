@@ -49,13 +49,19 @@
         </div>
     </div>
 </nav>
-<div>
-    <form method="POST" enctype="multipart/form-data" action="/video/upload/post">
-        <label class="mx-2" >File to upload:</label>
-        <input class="bg-black ring-1 ring-gray-800 text-white font-medium p-1" type="file" name="data">
-        <button type="submit">Upload File</button>
-    </form>
-</div>
+<main>
+    <div>
+        <form method="POST" enctype="multipart/form-data" action="/video/upload/post">
+            <label class="mx-2" >File to upload:</label>
+            <input class="bg-black ring-1 ring-gray-800 text-white font-medium p-1" type="file" name="data">
+            <label class="mx-2" >Video name:</label>
+            <input class="" type="text" name="videoName">
+            <label class="mx-2" >Tags:</label>
+            <input class="" type="text" name="tags">
+            <button type="submit">Upload File</button>
+        </form>
+    </div>
+</main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
