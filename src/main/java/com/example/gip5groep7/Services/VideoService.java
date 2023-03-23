@@ -147,7 +147,6 @@ public class VideoService {
         System.out.println("File '" + fileName + "' successfully deleted from sql database.");
         return fileName + " is successfully deleted from server.";
     }
-
     public Video createVideo(VideoDTO videoDTO) {
         Video newVideo = new Video(
                 videoDTO.name,
