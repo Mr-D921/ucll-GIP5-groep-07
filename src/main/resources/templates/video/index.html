@@ -47,6 +47,10 @@
             <h5>View count: </h5>
             <h5 class="d-flex justify-content-start" th:text="${Video.views}"></h5>
         </div>
+        <div class="d-flex flex-row">
+            <h5>Video tags: </h5>
+            <h5 th:text="${Video.tags}"></h5>
+        </div>
         <div class="d-flex flex-row-reverse">
             <form th:method="get" th:action="@{/video/delete/{video}(video=${videoName})}">
                 <button>DELETE</button>

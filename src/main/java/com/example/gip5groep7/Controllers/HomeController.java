@@ -63,7 +63,7 @@ public class HomeController {
     @GetMapping("/video/delete/{filename}")
     public String deleteVideo(@PathVariable String filename){
         videoService.deleteVideoFromFirebaseAndDatabase(filename);
-        return "home/index";
+        return "video/deletesuccess";
     }
 
 
