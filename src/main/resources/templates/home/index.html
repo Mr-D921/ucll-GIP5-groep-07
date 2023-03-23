@@ -35,9 +35,12 @@
 </nav>
 <main class="container">
     <table>
-        <tbody>
+        <tbody class="d-flex flex-wrap">
             <tr th:each="video: ${videoList}">
-                <td><a th:href="@{/video/{video}(video=${video.fileURL})}" th:text="${video.name}"></a></td>
+                <td class="d-flex flex-column bd-highlight mb-3">
+                    <img th:src="@{/images/hamster.png}" width="250" height="200">
+                    <a th:href="@{/video/{video}(video=${video.fileURL})}" th:text="${video.name}"></a>
+                </td>
             </tr>
         </tbody>
     </table>

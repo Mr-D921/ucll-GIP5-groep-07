@@ -47,7 +47,7 @@ public class HomeController {
 
         videoRestController.uploadVideoToFirebase(file, name, tagsStr);
         model.addAttribute("isCreated", "Video");
-        return "video/create";
+        return "video/success";
     }
     @RequestMapping("/video/{videoName}")
     public String getVideoByName(Model model, @PathVariable String videoName) throws Exception {
@@ -66,11 +66,5 @@ public class HomeController {
         return "home/index";
     }
 
-    /*@PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String createVideo(@RequestPart String name, @RequestPart MultipartFile data) {
-        VideoDTO videoDTO = new VideoDTO();
-        videoDTO.name = name;
-        videoRestController.createVideo(videoDTO, data);
-        return "redirect:/video/upload";
-    }*/
+
 }
