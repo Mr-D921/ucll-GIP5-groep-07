@@ -23,7 +23,7 @@ import java.util.List;
 public class VideoRestController {
 
     @Autowired
-    private VideoService videoService;
+    public VideoService videoService;
 
     // upload video to firebase
     // upload video url to sql database
